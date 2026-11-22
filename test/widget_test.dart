@@ -3,11 +3,19 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:myportofolio_mobile/main.dart';
 
 Finder formField(String name) => find.byKey(ValueKey('experience-$name'));
+Finder educationField(String name) => find.byKey(ValueKey('education-$name'));
 
 Future<void> openExperienceFromHome(WidgetTester tester) async {
   await tester.pumpWidget(const MyApp());
   await tester.pumpAndSettle();
   await tester.tap(find.text('Tambah Pengalaman'));
+  await tester.pumpAndSettle();
+}
+
+Future<void> openEducationFromHome(WidgetTester tester) async {
+  await tester.pumpWidget(const MyApp());
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Tambah Pendidikan'));
   await tester.pumpAndSettle();
 }
 
@@ -96,5 +104,101 @@ void main() {
     await tester.tap(find.text('Tutup'));
     await tester.pumpAndSettle();
     expect(find.text('Ringkasan Pengalaman'), findsNothing);
+  });
+
+  testWidgets('education form is reachable from the home action card', (
+    tester,
+  ) async {
+    await openEducationFromHome(tester);
+
+    expect(find.text('Pendidikan Baru'), findsOneWidget);
+    expect(educationField('organization'), findsOneWidget);
+    expect(educationField('field-of-study'), findsOneWidget);
+    expect(educationField('start-date'), findsOneWidget);
+  });
+
+  testWidgets('drawer opens education form and Home returns to main page', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.menu));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Add Education'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Pendidikan Baru'), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.menu));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Home'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Selamat datang di MyPortfolio Mobile!'), findsOneWidget);
+  });
+
+  testWidgets('education form validates required inputs', (tester) async {
+    await openEducationFromHome(tester);
+
+    final saveButton = educationField('save');
+    await tester.ensureVisible(saveButton);
+    await tester.tap(saveButton);
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('Institusi pendidikan tidak boleh kosong.'),
+      findsOneWidget,
+    );
+    expect(find.text('Bidang studi tidak boleh kosong.'), findsOneWidget);
+    expect(find.text('Deskripsi tidak boleh kosong.'), findsOneWidget);
+    expect(find.text('Tanggal mulai harus dipilih.'), findsOneWidget);
+    expect(find.text('Ringkasan Pendidikan'), findsNothing);
+  });
+
+  testWidgets('valid education input appears in summary dialog', (
+    tester,
+  ) async {
+    await openEducationFromHome(tester);
+
+    await tester.enterText(
+      educationField('organization'),
+      'Universitas Indonesia',
+    );
+    await tester.enterText(
+      educationField('field-of-study'),
+      'Sistem Informasi',
+    );
+    await tester.enterText(
+      educationField('description'),
+      'Mempelajari pengembangan perangkat lunak dan proses bisnis.',
+    );
+    await tester.enterText(
+      educationField('image-url'),
+      'https://example.com/campus.png',
+    );
+
+    await tester.ensureVisible(educationField('start-date'));
+    await tester.tap(educationField('start-date'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('OK'));
+    await tester.pumpAndSettle();
+
+    final saveButton = educationField('save');
+    await tester.ensureVisible(saveButton);
+    await tester.tap(saveButton);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Ringkasan Pendidikan'), findsOneWidget);
+    expect(find.text('Institusi'), findsOneWidget);
+    expect(find.text('Bidang studi'), findsOneWidget);
+    expect(find.text('Universitas Indonesia'), findsNWidgets(2));
+    expect(find.text('Sistem Informasi'), findsNWidgets(2));
+    expect(find.text('Masih berlangsung'), findsOneWidget);
+    expect(find.text('https://example.com/campus.png'), findsNWidgets(2));
+
+    await tester.tap(find.text('Tutup'));
+    await tester.pumpAndSettle();
+    expect(find.text('Ringkasan Pendidikan'), findsNothing);
   });
 }
