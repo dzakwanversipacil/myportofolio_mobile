@@ -44,7 +44,7 @@ class LeftDrawer extends StatelessWidget {
                 SizedBox(height: 8),
                 Expanded(
                   child: Text(
-                    'Explore personal projects and experiences!',
+                    'Explore projects, experiences, and education!',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 15, color: Colors.white),
@@ -70,6 +70,12 @@ class LeftDrawer extends StatelessWidget {
             title: const Text('Add Experience'),
             selected: currentRoute == AppRoutes.experienceForm,
             onTap: () => _openRoute(context, AppRoutes.experienceForm),
+          ),
+          ListTile(
+            leading: const Icon(Icons.school_outlined),
+            title: const Text('Add Education'),
+            selected: currentRoute == AppRoutes.educationForm,
+            onTap: () => _openRoute(context, AppRoutes.educationForm),
           ),
         ],
       ),

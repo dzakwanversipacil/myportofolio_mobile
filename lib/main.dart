@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:myportofolio_mobile/app_routes.dart';
+import 'package:myportofolio_mobile/screens/education_form.dart';
 import 'package:myportofolio_mobile/screens/experience_form.dart';
 import 'package:myportofolio_mobile/screens/menu.dart';
 import 'package:myportofolio_mobile/screens/project_form.dart';
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
         AppRoutes.home: (_) => const MyHomePage(),
         AppRoutes.projectForm: (_) => const ProjectFormPage(),
         AppRoutes.experienceForm: (_) => const ExperienceFormPage(),
+        AppRoutes.educationForm: (_) => const EducationFormPage(),
       },
     );
   }

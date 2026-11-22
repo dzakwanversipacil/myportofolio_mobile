@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:myportofolio_mobile/app_routes.dart';
+import 'package:myportofolio_mobile/screens/education_form.dart';
 import 'package:myportofolio_mobile/screens/experience_form.dart';
 import 'package:myportofolio_mobile/screens/project_form.dart';
 import 'package:myportofolio_mobile/widgets/left_drawer.dart';
@@ -27,6 +28,13 @@ class MyHomePage extends StatelessWidget {
       Colors.deepPurple,
       routeName: AppRoutes.experienceForm,
       destination: ExperienceFormPage(),
+    ),
+    ItemHomepage(
+      'Tambah Pendidikan',
+      Icons.school_outlined,
+      Colors.orange,
+      routeName: AppRoutes.educationForm,
+      destination: EducationFormPage(),
     ),
     ItemHomepage('Logout', Icons.logout, Colors.red),
   ];
