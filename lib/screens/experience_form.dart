@@ -191,6 +191,7 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                     ),
                     const SizedBox(height: 24),
                     TextFormField(
+                      key: const ValueKey('experience-title'),
                       controller: _titleController,
                       textInputAction: TextInputAction.next,
                       maxLength: 255,
@@ -206,6 +207,7 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                     ),
                     const SizedBox(height: 12),
                     TextFormField(
+                      key: const ValueKey('experience-organization'),
                       controller: _organizationController,
                       textInputAction: TextInputAction.next,
                       maxLength: 255,
@@ -221,6 +223,7 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                     ),
                     const SizedBox(height: 12),
                     TextFormField(
+                      key: const ValueKey('experience-description'),
                       controller: _descriptionController,
                       minLines: 3,
                       maxLines: 5,
@@ -234,6 +237,7 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                     ),
                     const SizedBox(height: 20),
                     TextFormField(
+                      key: const ValueKey('experience-start-date'),
                       controller: _startDateController,
                       readOnly: true,
                       onTap: () => _selectDate(isStartDate: true),
@@ -248,6 +252,7 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                     ),
                     const SizedBox(height: 20),
                     TextFormField(
+                      key: const ValueKey('experience-end-date'),
                       controller: _endDateController,
                       readOnly: true,
                       onTap: () => _selectDate(isStartDate: false),
@@ -260,6 +265,7 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                     ),
                     const SizedBox(height: 20),
                     TextFormField(
+                      key: const ValueKey('experience-image-url'),
                       controller: _imageUrlController,
                       keyboardType: TextInputType.url,
                       textInputAction: TextInputAction.done,
@@ -271,6 +277,7 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                     ),
                     const SizedBox(height: 24),
                     FilledButton.icon(
+                      key: const ValueKey('experience-save'),
                       onPressed: _submit,
                       icon: const Icon(Icons.save_outlined),
                       label: const Text('Simpan'),

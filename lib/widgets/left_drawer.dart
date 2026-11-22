@@ -10,11 +10,13 @@ class LeftDrawer extends StatelessWidget {
     navigator.pop();
 
     if (currentRoute == routeName) return;
-    if (routeName == AppRoutes.home) {
-      navigator.pushNamedAndRemoveUntil(routeName, (route) => false);
-    } else {
-      navigator.pushNamed(routeName);
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (routeName == AppRoutes.home) {
+        navigator.pushNamedAndRemoveUntil(routeName, (route) => false);
+      } else {
+        navigator.pushNamed(routeName);
+      }
+    });
   }
 
   @override
@@ -29,19 +31,24 @@ class LeftDrawer extends StatelessWidget {
             decoration: BoxDecoration(color: Colors.indigo),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
               children: [
                 Text(
                   'My Portfolio',
                   style: TextStyle(
-                    fontSize: 30,
+                    fontSize: 26,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(height: 10),
-                Text(
-                  'Explore personal projects and experiences!',
-                  style: TextStyle(fontSize: 15, color: Colors.white),
+                SizedBox(height: 8),
+                Expanded(
+                  child: Text(
+                    'Explore personal projects and experiences!',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 15, color: Colors.white),
+                  ),
                 ),
               ],
             ),
