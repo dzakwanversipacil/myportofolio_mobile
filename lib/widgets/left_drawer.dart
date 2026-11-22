@@ -1,15 +1,29 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:myportofolio_mobile/menu.dart';
-
-// TODO: Impor halaman ProjectFormPage jika sudah dibuat
+import 'package:myportofolio_mobile/app_routes.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
 
+  void _openRoute(BuildContext context, String routeName) {
+    final currentRoute = ModalRoute.of(context)?.settings.name;
+    final navigator = Navigator.of(context);
+    navigator.pop();
+
+    if (currentRoute == routeName) return;
+    if (routeName == AppRoutes.home) {
+      navigator.pushNamedAndRemoveUntil(routeName, (route) => false);
+    } else {
+      navigator.pushNamed(routeName);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final currentRoute = ModalRoute.of(context)?.settings.name;
+
     return Drawer(
       child: ListView(
+        padding: EdgeInsets.zero,
         children: [
           const DrawerHeader(
             decoration: BoxDecoration(color: Colors.indigo),
@@ -32,27 +46,23 @@ class LeftDrawer extends StatelessWidget {
               ],
             ),
           ),
-          // TODO: Bagian routing
           ListTile(
             leading: const Icon(Icons.home_outlined),
             title: const Text('Home'),
-            // Navigasi ke halaman utama portofolio
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => MyHomePage()),
-              );
-            },
+            selected: currentRoute == AppRoutes.home,
+            onTap: () => _openRoute(context, AppRoutes.home),
           ),
           ListTile(
             leading: const Icon(Icons.add_circle_outline),
             title: const Text('Add Project'),
-            // Navigasi ke halaman tambah proyek
-            onTap: () {
-              /*
-              TODO: Buatlah routing ke halaman ProjectFormPage yang akan dibuat nanti.
-              */
-            },
+            selected: currentRoute == AppRoutes.projectForm,
+            onTap: () => _openRoute(context, AppRoutes.projectForm),
+          ),
+          ListTile(
+            leading: const Icon(Icons.work_history_outlined),
+            title: const Text('Add Experience'),
+            selected: currentRoute == AppRoutes.experienceForm,
+            onTap: () => _openRoute(context, AppRoutes.experienceForm),
           ),
         ],
       ),
