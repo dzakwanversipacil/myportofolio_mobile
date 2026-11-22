@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:myportofolio_mobile/app_routes.dart';
+import 'package:myportofolio_mobile/theme/portfolio_theme.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
@@ -28,26 +29,33 @@ class LeftDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           const DrawerHeader(
-            decoration: BoxDecoration(color: Colors.indigo),
+            decoration: BoxDecoration(
+              color: PortfolioTheme.paper,
+              border: Border(bottom: BorderSide(color: PortfolioTheme.line)),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: [
                 Text(
-                  'My Portfolio',
+                  'Dzakwan Farabi\nAl Muzhaffar',
                   style: TextStyle(
-                    fontSize: 26,
+                    fontSize: 22,
+                    height: 1.1,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: PortfolioTheme.ink,
                   ),
                 ),
                 SizedBox(height: 8),
                 Expanded(
                   child: Text(
-                    'Explore projects, experiences, and education!',
+                    'Information Systems · Universitas Indonesia',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 15, color: Colors.white),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: PortfolioTheme.textMuted,
+                    ),
                   ),
                 ),
               ],

@@ -8,14 +8,18 @@ Finder educationField(String name) => find.byKey(ValueKey('education-$name'));
 Future<void> openExperienceFromHome(WidgetTester tester) async {
   await tester.pumpWidget(const MyApp());
   await tester.pumpAndSettle();
-  await tester.tap(find.text('Tambah Pengalaman'));
+  final experienceAction = find.text('Tambah Pengalaman');
+  await tester.ensureVisible(experienceAction);
+  await tester.tap(experienceAction);
   await tester.pumpAndSettle();
 }
 
 Future<void> openEducationFromHome(WidgetTester tester) async {
   await tester.pumpWidget(const MyApp());
   await tester.pumpAndSettle();
-  await tester.tap(find.text('Tambah Pendidikan'));
+  final educationAction = find.text('Tambah Pendidikan');
+  await tester.ensureVisible(educationAction);
+  await tester.tap(educationAction);
   await tester.pumpAndSettle();
 }
 

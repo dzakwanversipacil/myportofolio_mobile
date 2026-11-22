@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:myportofolio_mobile/theme/portfolio_theme.dart';
 
 class ItemHomepage {
   const ItemHomepage(
@@ -24,9 +25,13 @@ class ItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: item.color,
-      borderRadius: BorderRadius.circular(12),
+      color: PortfolioTheme.cardBackground,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(PortfolioTheme.radius)),
+        side: BorderSide(color: PortfolioTheme.line),
+      ),
       child: InkWell(
+        borderRadius: BorderRadius.circular(PortfolioTheme.radius),
         // Area responsif terhadap sentuhan
         onTap: () {
           if (item.destination != null) {
@@ -49,21 +54,30 @@ class ItemCard extends StatelessWidget {
               ),
             );
         },
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(item.icon, color: Colors.white, size: 30.0),
-                const Padding(padding: EdgeInsets.all(3)),
-                Text(
-                  item.name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: item.color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(PortfolioTheme.radius),
                 ),
-              ],
-            ),
+                child: Icon(item.icon, color: item.color, size: 26),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                item.name,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: PortfolioTheme.ink,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
         ),
       ),
