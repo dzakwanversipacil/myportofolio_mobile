@@ -1,12 +1,19 @@
 import 'package:material_ui/material_ui.dart';
 
 class ItemHomepage {
-  const ItemHomepage(this.name, this.icon, this.color, {this.routeName});
+  const ItemHomepage(
+    this.name,
+    this.icon,
+    this.color, {
+    this.routeName,
+    this.destination,
+  });
 
   final String name;
   final IconData icon;
   final Color color;
   final String? routeName;
+  final Widget? destination;
 }
 
 class ItemCard extends StatelessWidget {
@@ -22,8 +29,14 @@ class ItemCard extends StatelessWidget {
       child: InkWell(
         // Area responsif terhadap sentuhan
         onTap: () {
-          if (item.routeName != null) {
-            Navigator.pushNamed(context, item.routeName!);
+          if (item.destination != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                settings: RouteSettings(name: item.routeName),
+                builder: (_) => item.destination!,
+              ),
+            );
             return;
           }
 

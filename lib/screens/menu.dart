@@ -1,5 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:myportofolio_mobile/app_routes.dart';
+import 'package:myportofolio_mobile/screens/experience_form.dart';
+import 'package:myportofolio_mobile/screens/project_form.dart';
 import 'package:myportofolio_mobile/widgets/left_drawer.dart';
 import 'package:myportofolio_mobile/widgets/project_card.dart';
 
@@ -17,12 +19,14 @@ class MyHomePage extends StatelessWidget {
       Icons.add_circle,
       Colors.green,
       routeName: AppRoutes.projectForm,
+      destination: ProjectFormPage(),
     ),
     ItemHomepage(
       'Tambah Pengalaman',
       Icons.work_history_outlined,
       Colors.deepPurple,
       routeName: AppRoutes.experienceForm,
+      destination: ExperienceFormPage(),
     ),
     ItemHomepage('Logout', Icons.logout, Colors.red),
   ];
