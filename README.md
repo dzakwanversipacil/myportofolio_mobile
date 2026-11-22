@@ -7,7 +7,7 @@ developed using Flutter.
 
 - Personal information cards
 - Responsive portfolio action grid
-- Project and experience forms
+- Project, experience, and education forms
 - Form validation and date picker inputs
 - Experience summary dialog
 - Navigation from action cards and a shared drawer
@@ -25,6 +25,7 @@ lib/
 |-- app_routes.dart
 |-- main.dart
 |-- screens/
+|   |-- education_form.dart
 |   |-- experience_form.dart
 |   |-- menu.dart
 |   `-- project_form.dart
@@ -98,7 +99,7 @@ _Full restart_ diperlukan ketika perubahan yang dilakukan tidak dapat diterapkan
 
 ### Tugas 8
 
-1. `Navigator.push()` menambahkan _route_ baru ke bagian teratas _navigation stack_, sehingga halaman sebelumnya tetap tersimpan dan dapat dituju kembali. `Navigator.pushReplacement()` mengganti _route_ teratas sehingga halaman yang digantikan tidak lagi menjadi tujuan saat pengguna kembali. `Navigator.pop()` menghapus _route_ teratas dan menampilkan halaman sebelumnya. Kartu **Tambah Pengalaman** menggunakan `Navigator.push()` dengan `MaterialPageRoute`. Opsi **Home** pada drawer menutup drawer lalu menggunakan `pushNamedAndRemoveUntil()` agar pengguna pasti kembali ke halaman utama tanpa menyisakan tumpukan halaman formulir. `Navigator.pop()` juga digunakan oleh tombol **Tutup** untuk menutup dialog ringkasan.
+1. `Navigator.push()` menambahkan _route_ baru ke bagian teratas _navigation stack_, sehingga halaman sebelumnya tetap tersimpan dan dapat dituju kembali. `Navigator.pushReplacement()` mengganti _route_ teratas sehingga halaman yang digantikan tidak lagi menjadi tujuan saat pengguna kembali. `Navigator.pop()` menghapus _route_ teratas dan menampilkan halaman sebelumnya. Kartu **Tambah Pengalaman** dan **Tambah Pendidikan** menggunakan `Navigator.push()` dengan `MaterialPageRoute`. Opsi **Home** pada drawer menutup drawer lalu menggunakan `pushNamedAndRemoveUntil()` agar pengguna pasti kembali ke halaman utama tanpa menyisakan tumpukan halaman formulir. `Navigator.pop()` juga digunakan oleh tombol **Tutup** untuk menutup dialog ringkasan.
 
 2. `Scaffold` menyediakan struktur halaman yang konsisten berupa `AppBar`, `Drawer`, dan `body`. `AppBar` seluruh halaman memperoleh warna dan warna teks dari `AppBarTheme` pada `MaterialApp`, sedangkan `LeftDrawer` yang sama dipasang pada halaman utama, formulir proyek, dan formulir pengalaman. Contoh konsistensi tema adalah warna indigo pada `AppBar` dan `DrawerHeader` di seluruh halaman.
 
@@ -108,9 +109,9 @@ _Full restart_ diperlukan ketika perubahan yang dilakukan tidak dapat diterapkan
 
 ## AI Disclosure
 
-Saya menggunakan ChatGPT/Codex sebagai Generative AI untuk membantu membaca spesifikasi Tugas 8, membandingkan model `Experience` pada proyek web, menyusun form Flutter, merapikan navigasi, menulis widget test, dan meninjau dokumentasi. Strategi _prompting_ yang dipakai adalah memberikan dokumen tugas serta kedua repositori sebagai konteks, meminta implementasi bertahap, lalu meminta verifikasi melalui `flutter analyze` dan `flutter test`.
+Saya menggunakan ChatGPT/Codex sebagai Generative AI untuk membantu membaca spesifikasi Tugas 8, membandingkan model `Experience` dan `Education` pada proyek web, menyusun form Flutter, merapikan navigasi, menulis widget test, dan meninjau dokumentasi. Strategi _prompting_ yang dipakai adalah memberikan dokumen tugas serta kedua repositori sebagai konteks, meminta implementasi bertahap, lalu meminta verifikasi melalui `flutter analyze` dan `flutter test`.
 
-Bagian yang dibantu secara spesifik mencakup validasi teks, URL, dan urutan tanggal; penggunaan date picker; dialog ringkasan; route dan drawer; layout responsif; serta skenario pengujian. Hasil AI tidak digunakan mentah: field formulir diperiksa kembali terhadap model Django, navigasi kartu disesuaikan agar memakai `Navigator.push()` sesuai rubrik, dan masalah overflow pada drawer diperbaiki berdasarkan hasil widget test. Keterbatasannya adalah AI tidak menggantikan pengujian pada perangkat fisik dan formulir tugas ini belum mengirim data ke backend karena persistensi tidak diminta pada Tugas 8.
+Bagian yang dibantu secara spesifik mencakup validasi teks, URL, dan urutan tanggal; penggunaan date picker; dialog ringkasan untuk pengalaman dan pendidikan; route dan drawer; layout responsif; helper form yang dapat digunakan ulang; serta skenario pengujian. Hasil AI tidak digunakan mentah: field formulir diperiksa kembali terhadap model Django, navigasi kartu disesuaikan agar memakai `Navigator.push()` sesuai rubrik, dan masalah overflow pada drawer diperbaiki berdasarkan hasil widget test. Keterbatasannya adalah AI tidak menggantikan pengujian pada perangkat fisik dan formulir tugas ini belum mengirim data ke backend karena persistensi tidak diminta pada Tugas 8.
 
 Percakapan pengerjaan ini tersimpan dalam sesi Codex. Contoh _prompt_ yang digunakan:
 
