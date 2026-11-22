@@ -1,4 +1,6 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:myportofolio_mobile/utils/form_validation.dart';
+import 'package:myportofolio_mobile/widgets/form_summary_row.dart';
 import 'package:myportofolio_mobile/widgets/left_drawer.dart';
 
 class ExperienceFormPage extends StatefulWidget {
@@ -31,12 +33,6 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
     super.dispose();
   }
 
-  String _formatDate(DateTime date) {
-    final month = date.month.toString().padLeft(2, '0');
-    final day = date.day.toString().padLeft(2, '0');
-    return '${date.year}-$month-$day';
-  }
-
   Future<void> _selectDate({required bool isStartDate}) async {
     final initialDate = isStartDate
         ? (_startDate ?? DateTime.now())
@@ -54,48 +50,12 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
     setState(() {
       if (isStartDate) {
         _startDate = selectedDate;
-        _startDateController.text = _formatDate(selectedDate);
+        _startDateController.text = formatPortfolioDate(selectedDate);
       } else {
         _endDate = selectedDate;
-        _endDateController.text = _formatDate(selectedDate);
+        _endDateController.text = formatPortfolioDate(selectedDate);
       }
     });
-  }
-
-  String? _validateRequiredText(
-    String? value, {
-    required String fieldName,
-    int? maxLength,
-  }) {
-    final text = value?.trim() ?? '';
-    if (text.isEmpty) return '$fieldName tidak boleh kosong.';
-    if (maxLength != null && text.length > maxLength) {
-      return '$fieldName maksimal $maxLength karakter.';
-    }
-    return null;
-  }
-
-  String? _validateImageUrl(String? value) {
-    final text = value?.trim() ?? '';
-    if (text.isEmpty) return null;
-
-    final uri = Uri.tryParse(text);
-    if (uri == null ||
-        !uri.hasScheme ||
-        !uri.hasAuthority ||
-        (uri.scheme != 'http' && uri.scheme != 'https')) {
-      return 'URL gambar harus berupa alamat HTTP atau HTTPS yang valid.';
-    }
-    return null;
-  }
-
-  String? _validateEndDate(String? _) {
-    if (_startDate != null &&
-        _endDate != null &&
-        _endDate!.isBefore(_startDate!)) {
-      return 'Tanggal selesai tidak boleh sebelum tanggal mulai.';
-    }
-    return null;
   }
 
   void _submit() {
@@ -111,26 +71,29 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _SummaryRow(label: 'Judul', value: _titleController.text.trim()),
-              _SummaryRow(
+              FormSummaryRow(
+                label: 'Judul',
+                value: _titleController.text.trim(),
+              ),
+              FormSummaryRow(
                 label: 'Organisasi',
                 value: _organizationController.text.trim(),
               ),
-              _SummaryRow(
+              FormSummaryRow(
                 label: 'Deskripsi',
                 value: _descriptionController.text.trim(),
               ),
-              _SummaryRow(
+              FormSummaryRow(
                 label: 'Tanggal mulai',
                 value: _startDateController.text,
               ),
-              _SummaryRow(
+              FormSummaryRow(
                 label: 'Tanggal selesai',
                 value: _endDateController.text.isEmpty
                     ? 'Masih berlangsung'
                     : _endDateController.text,
               ),
-              _SummaryRow(
+              FormSummaryRow(
                 label: 'URL gambar',
                 value: _imageUrlController.text.trim().isEmpty
                     ? '-'
@@ -199,7 +162,7 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                         label: 'Judul Pengalaman',
                         hint: 'Contoh: Data Scientist Intern',
                       ),
-                      validator: (value) => _validateRequiredText(
+                      validator: (value) => validateRequiredText(
                         value,
                         fieldName: 'Judul pengalaman',
                         maxLength: 255,
@@ -215,7 +178,7 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                         label: 'Organisasi',
                         hint: 'Contoh: Google',
                       ),
-                      validator: (value) => _validateRequiredText(
+                      validator: (value) => validateRequiredText(
                         value,
                         fieldName: 'Organisasi',
                         maxLength: 255,
@@ -233,7 +196,7 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                         hint: 'Jelaskan tanggung jawab dan pencapaianmu.',
                       ),
                       validator: (value) =>
-                          _validateRequiredText(value, fieldName: 'Deskripsi'),
+                          validateRequiredText(value, fieldName: 'Deskripsi'),
                     ),
                     const SizedBox(height: 20),
                     TextFormField(
@@ -261,7 +224,7 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                         hint: 'Kosongkan jika masih berlangsung',
                         suffixIcon: const Icon(Icons.calendar_today_outlined),
                       ),
-                      validator: _validateEndDate,
+                      validator: (_) => validateDateOrder(_startDate, _endDate),
                     ),
                     const SizedBox(height: 20),
                     TextFormField(
@@ -273,7 +236,7 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                         label: 'URL Gambar (opsional)',
                         hint: 'https://example.com/image.jpg',
                       ),
-                      validator: _validateImageUrl,
+                      validator: validateOptionalHttpUrl,
                     ),
                     const SizedBox(height: 24),
                     FilledButton.icon(
@@ -288,28 +251,6 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _SummaryRow extends StatelessWidget {
-  const _SummaryRow({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label, style: Theme.of(context).textTheme.labelMedium),
-          const SizedBox(height: 2),
-          Text(value),
-        ],
       ),
     );
   }
