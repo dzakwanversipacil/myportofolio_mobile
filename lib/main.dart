@@ -4,6 +4,7 @@ import 'package:myportofolio_mobile/screens/education_form.dart';
 import 'package:myportofolio_mobile/screens/experience_form.dart';
 import 'package:myportofolio_mobile/screens/menu.dart';
 import 'package:myportofolio_mobile/screens/project_form.dart';
+import 'package:myportofolio_mobile/theme/portfolio_theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,21 +16,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: Colors.indigo,
-      secondary: Colors.amber[700],
-    );
-
     return MaterialApp(
-      title: 'MyPortofolio',
-      theme: ThemeData(
-        colorScheme: colorScheme,
-        appBarTheme: AppBarTheme(
-          backgroundColor: colorScheme.primary,
-          foregroundColor: colorScheme.onPrimary,
-        ),
-        useMaterial3: true,
-      ),
+      title: 'Dzakwan Farabi Al Muzhaffar - Portofolio',
+      theme: PortfolioTheme.lightTheme,
       initialRoute: AppRoutes.home,
       routes: {
         AppRoutes.home: (_) => const MyHomePage(),
