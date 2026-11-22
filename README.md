@@ -97,6 +97,14 @@ Sementara itu, _hot restart_ merupakan proses _restart_ aplikasi Flutter dari aw
 
 _Full restart_ diperlukan ketika perubahan yang dilakukan tidak dapat diterapkan hanya melalui mekanisme _hot reload_ maupun _hot restart_, terutama jika berkaitan dengan kode _native_, konfigurasi platform, atau perubahan dependensi yang memerlukan proses _rebuild_.
 
+## AI Disclosure
+
+Saya menggunakan ChatGPT sebagai Generative AI yang digunakan untuk memahami perubahan yang harus saya terapkan secara garis besar pada proyek ini agar selaras dengan proyek versi webnya, serta memahami beberapa materi mengenai Flutter. Meskipun begitu, saya melakukan chat tersebut dalam mode temporer sehingga tidak bisa di-share. Berikut merupakan prompt list yang saya gunakan:
+
+"Dengan tugas sederhana seperti ini, dan dengan proyek web saya yang seperti ini, bagaimana saya bisa menerapkan perubahan yang sesuai?"
+"Jelaskan mengenai [nama materi]."
+"Apa perbedaan [nama materi] dan [nama materi]? Jelaskan secara detail dan sesuaikan dengan pemahaman pemula Flutter."
+
 ### Tugas 8
 
 1. `Navigator.push()` menambahkan _route_ baru ke bagian teratas _navigation stack_, sehingga halaman sebelumnya tetap tersimpan dan dapat dituju kembali. `Navigator.pushReplacement()` mengganti _route_ teratas sehingga halaman yang digantikan tidak lagi menjadi tujuan saat pengguna kembali. `Navigator.pop()` menghapus _route_ teratas dan menampilkan halaman sebelumnya. Kartu **Tambah Pengalaman** dan **Tambah Pendidikan** menggunakan `Navigator.push()` dengan `MaterialPageRoute`. Opsi **Home** pada drawer menutup drawer lalu menggunakan `pushNamedAndRemoveUntil()` agar pengguna pasti kembali ke halaman utama tanpa menyisakan tumpukan halaman formulir. `Navigator.pop()` juga digunakan oleh tombol **Tutup** untuk menutup dialog ringkasan.
@@ -111,11 +119,10 @@ _Full restart_ diperlukan ketika perubahan yang dilakukan tidak dapat diterapkan
 
 Saya menggunakan ChatGPT/Codex sebagai Generative AI untuk membantu membaca spesifikasi Tugas 8, membandingkan model `Experience` dan `Education` pada proyek web, menyusun form Flutter, merapikan navigasi, menulis widget test, dan meninjau dokumentasi. Strategi _prompting_ yang dipakai adalah memberikan dokumen tugas serta kedua repositori sebagai konteks, meminta implementasi bertahap, lalu meminta verifikasi melalui `flutter analyze` dan `flutter test`.
 
-Bagian yang dibantu secara spesifik mencakup validasi teks, URL, dan urutan tanggal; penggunaan date picker; dialog ringkasan untuk pengalaman dan pendidikan; route dan drawer; layout responsif; helper form yang dapat digunakan ulang; serta skenario pengujian. Hasil AI tidak digunakan mentah: field formulir diperiksa kembali terhadap model Django, navigasi kartu disesuaikan agar memakai `Navigator.push()` sesuai rubrik, dan masalah overflow pada drawer diperbaiki berdasarkan hasil widget test. Keterbatasannya adalah AI tidak menggantikan pengujian pada perangkat fisik dan formulir tugas ini belum mengirim data ke backend karena persistensi tidak diminta pada Tugas 8.
+Bagian yang dibantu secara spesifik mencakup validasi teks, URL, dan urutan tanggal; penggunaan date picker; dialog ringkasan untuk pengalaman dan pendidikan; route dan drawer; layout responsif; helper form yang dapat digunakan ulang; serta skenario pengujian. Hasil AI tidak digunakan mentah, field formulir diperiksa kembali terhadap model Django, navigasi kartu disesuaikan agar memakai `Navigator.push()` sesuai rubrik, dan masalah overflow pada drawer diperbaiki berdasarkan hasil widget test. Selain itu, AI juga memiliki beberapa kesalahan dalam memberikan contoh sintaks kode yang sesuai sehingga harus disesuaikan lagi dengan proyeknya.
 
 Percakapan pengerjaan ini tersimpan dalam sesi Codex. Contoh _prompt_ yang digunakan:
 
-- "Lakukan perubahan pada myportofolio_mobile untuk menyelesaikan tugas ini, dengan myportofolio sebagai acuan untuk tugas webnya. Lakukan commit bertahap untuk menerapkan best-practice."
 - "Dengan tugas sederhana seperti ini, dan dengan proyek web saya yang seperti ini, bagaimana saya bisa menerapkan perubahan yang sesuai?"
 - "Jelaskan mengenai [nama materi]."
 - "Apa perbedaan [nama materi] dan [nama materi]? Jelaskan secara detail dan sesuaikan dengan pemahaman pemula Flutter."
