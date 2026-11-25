@@ -1,6 +1,9 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:myportofolio_mobile/app_routes.dart';
+import 'package:myportofolio_mobile/services/auth_state.dart';
 import 'package:myportofolio_mobile/theme/portfolio_theme.dart';
+import 'package:myportofolio_mobile/widgets/auth_guard.dart';
+import 'package:provider/provider.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
@@ -23,6 +26,7 @@ class LeftDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentRoute = ModalRoute.of(context)?.settings.name;
+    final isLoggedIn = context.watch<AuthState>().isLoggedIn;
 
     return Drawer(
       child: ListView(
@@ -71,7 +75,11 @@ class LeftDrawer extends StatelessWidget {
             leading: const Icon(Icons.add_circle_outline),
             title: const Text('Add Project'),
             selected: currentRoute == AppRoutes.projectForm,
-            onTap: () => _openRoute(context, AppRoutes.projectForm),
+            onTap: () async {
+              final loggedIn = await ensureLoggedIn(context);
+              if (!loggedIn || !context.mounted) return;
+              _openRoute(context, AppRoutes.projectForm);
+            },
           ),
           ListTile(
             leading: const Icon(Icons.work_history_outlined),
@@ -85,6 +93,26 @@ class LeftDrawer extends StatelessWidget {
             selected: currentRoute == AppRoutes.educationForm,
             onTap: () => _openRoute(context, AppRoutes.educationForm),
           ),
+          if (!isLoggedIn)
+            ListTile(
+              leading: const Icon(Icons.login),
+              title: const Text('Login'),
+              onTap: () async {
+                final loggedIn = await ensureLoggedIn(context);
+                if (!loggedIn || !context.mounted) return;
+                Navigator.pop(context);
+              },
+            )
+          else
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
+              onTap: () async {
+                await context.read<AuthState>().logout();
+                if (!context.mounted) return;
+                Navigator.pop(context);
+              },
+            ),
         ],
       ),
     );
