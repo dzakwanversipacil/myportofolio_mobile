@@ -48,9 +48,7 @@ class ItemCard extends StatelessWidget {
               ..showSnackBar(
                 SnackBar(
                   content: Text(
-                    wasLoggedIn
-                        ? 'Logout berhasil.'
-                        : 'Kamu belum login.',
+                    wasLoggedIn ? 'Logout berhasil.' : 'Kamu belum login.',
                   ),
                 ),
               );
