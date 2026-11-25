@@ -1,5 +1,9 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:myportofolio_mobile/app_routes.dart';
+import 'package:myportofolio_mobile/services/auth_state.dart';
 import 'package:myportofolio_mobile/theme/portfolio_theme.dart';
+import 'package:myportofolio_mobile/widgets/auth_guard.dart';
+import 'package:provider/provider.dart';
 
 class ItemHomepage {
   const ItemHomepage(
@@ -33,7 +37,31 @@ class ItemCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(PortfolioTheme.radius),
         // Area responsif terhadap sentuhan
-        onTap: () {
+        onTap: () async {
+          if (item.name == 'Logout') {
+            final authState = context.read<AuthState>();
+            final wasLoggedIn = authState.isLoggedIn;
+            if (wasLoggedIn) await authState.logout();
+            if (!context.mounted) return;
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(
+                    wasLoggedIn
+                        ? 'Logout berhasil.'
+                        : 'Kamu belum login.',
+                  ),
+                ),
+              );
+            return;
+          }
+
+          if (item.routeName == AppRoutes.projectForm) {
+            final loggedIn = await ensureLoggedIn(context);
+            if (!loggedIn || !context.mounted) return;
+          }
+
           if (item.destination != null) {
             Navigator.push(
               context,
