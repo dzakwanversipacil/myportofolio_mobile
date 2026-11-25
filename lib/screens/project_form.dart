@@ -1,5 +1,11 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:myportofolio_mobile/models/project.dart';
+import 'package:myportofolio_mobile/services/api_client.dart';
+import 'package:myportofolio_mobile/services/auth_state.dart';
+import 'package:myportofolio_mobile/utils/form_validation.dart';
+import 'package:myportofolio_mobile/widgets/auth_guard.dart';
 import 'package:myportofolio_mobile/widgets/left_drawer.dart';
+import 'package:provider/provider.dart';
 
 class ProjectFormPage extends StatefulWidget {
   const ProjectFormPage({super.key});
@@ -11,19 +17,91 @@ class ProjectFormPage extends StatefulWidget {
 class _ProjectFormPageState extends State<ProjectFormPage> {
   final _formKey = GlobalKey<FormState>();
 
-  String _projectName = "";
+  String _title = "";
   String _description = "";
-  String _category = "Web Development"; // default
-  String _technologies = "";
-  String _projectLink = "";
+  String _techStack = "";
+  String _projectUrl = "";
+  String _projectImageUrl = "";
 
-  final List<String> _categories = [
-    'Web Development',
-    'Mobile Development',
-    'Machine Learning',
-    'Data Science',
-    'Other',
-  ];
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    final loggedIn = await ensureLoggedIn(context);
+    if (!loggedIn || !mounted) return;
+
+    final authState = context.read<AuthState>();
+    final token = authState.token;
+    if (token == null) return;
+
+    final newProject = Project(
+      title: _title.trim(),
+      description: _description.trim(),
+      techStack: _techStack.trim(),
+      projectUrl: _projectUrl.trim(),
+      projectImageUrl: _projectImageUrl.trim(),
+    );
+
+    try {
+      final created = await context.read<ApiClient>().createProject(
+        newProject,
+        token: token,
+      );
+      if (!mounted) return;
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Proyek berhasil ditambahkan!'),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Title: ${created.title}'),
+                  Text('Description: ${created.description}'),
+                  Text('Tech Stack: ${created.techStack}'),
+                  Text('Project URL: ${created.projectUrl}'),
+                  Text('Project Image URL: ${created.projectImageUrl}'),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          );
+        },
+      );
+      _formKey.currentState?.reset();
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      if (e.statusCode == 401) {
+        await authState.logout();
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Sesi berakhir. Silakan login ulang.')),
+        );
+        await ensureLoggedIn(context);
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal menyimpan proyek (${e.statusCode}).')),
+      );
+    }
+  }
+
+  String? _validateProjectUrl(String? value) {
+    final text = value?.trim() ?? '';
+    if (text.isEmpty) return "Project URL tidak boleh kosong!";
+    final uri = Uri.tryParse(text);
+    if (uri == null ||
+        !uri.hasAuthority ||
+        (uri.scheme != 'http' && uri.scheme != 'https')) {
+      return "Project URL harus berupa alamat HTTP atau HTTPS yang valid.";
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,22 +114,22 @@ class _ProjectFormPageState extends State<ProjectFormPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // === Project Name ===
+              // === Title ===
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   decoration: InputDecoration(
-                    hintText: "Nama Proyek",
-                    labelText: "Nama Proyek",
+                    hintText: "Title",
+                    labelText: "Title",
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      _projectName = value!;
+                      _title = value!;
                     });
                   },
                   validator: (String? value) {
                     if (value == null || value.trim().isEmpty) {
-                      return "Nama proyek tidak boleh kosong!";
+                      return "Title tidak boleh kosong!";
                     }
                     return null;
                   },
@@ -64,8 +142,8 @@ class _ProjectFormPageState extends State<ProjectFormPage> {
                 child: TextFormField(
                   maxLines: 5,
                   decoration: InputDecoration(
-                    hintText: "Deskripsi Proyek",
-                    labelText: "Deskripsi Proyek",
+                    hintText: "Description",
+                    labelText: "Description",
                   ),
                   onChanged: (String? value) {
                     setState(() {
@@ -74,64 +152,68 @@ class _ProjectFormPageState extends State<ProjectFormPage> {
                   },
                   validator: (String? value) {
                     if (value == null || value.trim().isEmpty) {
-                      return "Deskripsi proyek tidak boleh kosong!";
+                      return "Description tidak boleh kosong!";
                     }
                     return null;
                   },
                 ),
               ),
 
-              // === Category ===
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: DropdownButtonFormField<String>(
-                  decoration: InputDecoration(labelText: "Kategori Proyek"),
-                  initialValue: _category,
-                  items: _categories
-                      .map(
-                        (category) => DropdownMenuItem(
-                          value: category,
-                          child: Text(category),
-                        ),
-                      )
-                      .toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _category = newValue!;
-                    });
-                  },
-                ),
-              ),
-
-              // === Technologies ===
+              // === Tech Stack ===
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   decoration: InputDecoration(
                     hintText: "Contoh: Flutter, Django, Figma",
-                    labelText: "Teknologi yang Digunakan",
+                    labelText: "Tech Stack",
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      _technologies = value!;
+                      _techStack = value!;
                     });
+                  },
+                  validator: (String? value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return "Tech Stack tidak boleh kosong!";
+                    }
+                    return null;
                   },
                 ),
               ),
 
-              // === Project Link ===
+              // === Project URL ===
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  keyboardType: TextInputType.url,
                   decoration: InputDecoration(
-                    hintText: "URL Proyek (opsional)",
-                    labelText: "Tautan Proyek",
+                    hintText: "https://example.com",
+                    labelText: "Project URL",
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      _projectLink = value!;
+                      _projectUrl = value!;
                     });
                   },
+                  validator: _validateProjectUrl,
+                ),
+              ),
+
+              // === Project Image URL ===
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  keyboardType: TextInputType.url,
+                  decoration: InputDecoration(
+                    hintText: "https://example.com/image.png",
+                    labelText: "Project Image URL (Optional)",
+                  ),
+                  onChanged: (String? value) {
+                    setState(() {
+                      _projectImageUrl = value!;
+                    });
+                  },
+                  validator: validateOptionalHttpUrl,
                 ),
               ),
 
@@ -141,39 +223,7 @@ class _ProjectFormPageState extends State<ProjectFormPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: const Text('Proyek berhasil ditambahkan!'),
-                              content: SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Nama Proyek: $_projectName'),
-                                    Text('Deskripsi: $_description'),
-                                    Text('Kategori: $_category'),
-                                    Text('Teknologi: $_technologies'),
-                                    Text('Tautan: $_projectLink'),
-                                  ],
-                                ),
-                              ),
-                              actions: [
-                                TextButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    _formKey.currentState!.reset();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
-                    },
+                    onPressed: _submit,
                     child: const Text("Save"),
                   ),
                 ),
