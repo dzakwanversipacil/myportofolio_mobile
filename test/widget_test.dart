@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:myportofolio_mobile/main.dart';
+import 'package:myportofolio_mobile/services/api_client.dart';
 
 Finder formField(String name) => find.byKey(ValueKey('experience-$name'));
 Finder educationField(String name) => find.byKey(ValueKey('education-$name'));
 
 Future<void> openExperienceFromHome(WidgetTester tester) async {
-  await tester.pumpWidget(const MyApp());
+  await tester.pumpWidget(MyApp(apiClient: ApiClient()));
   await tester.pumpAndSettle();
   final experienceAction = find.text('Tambah Pengalaman');
   await tester.ensureVisible(experienceAction);
@@ -15,7 +16,7 @@ Future<void> openExperienceFromHome(WidgetTester tester) async {
 }
 
 Future<void> openEducationFromHome(WidgetTester tester) async {
-  await tester.pumpWidget(const MyApp());
+  await tester.pumpWidget(MyApp(apiClient: ApiClient()));
   await tester.pumpAndSettle();
   final educationAction = find.text('Tambah Pendidikan');
   await tester.ensureVisible(educationAction);
@@ -37,7 +38,7 @@ void main() {
   testWidgets('drawer opens experience form and Home returns to main page', (
     tester,
   ) async {
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(MyApp(apiClient: ApiClient()));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byIcon(Icons.menu));
@@ -124,7 +125,7 @@ void main() {
   testWidgets('drawer opens education form and Home returns to main page', (
     tester,
   ) async {
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(MyApp(apiClient: ApiClient()));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byIcon(Icons.menu));
