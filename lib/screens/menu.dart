@@ -3,6 +3,7 @@ import 'package:myportofolio_mobile/app_routes.dart';
 import 'package:myportofolio_mobile/screens/education_form.dart';
 import 'package:myportofolio_mobile/screens/experience_form.dart';
 import 'package:myportofolio_mobile/screens/project_form.dart';
+import 'package:myportofolio_mobile/screens/project_list_screen.dart';
 import 'package:myportofolio_mobile/theme/portfolio_theme.dart';
 import 'package:myportofolio_mobile/widgets/left_drawer.dart';
 import 'package:myportofolio_mobile/widgets/project_card.dart';
@@ -23,6 +24,7 @@ class MyHomePage extends StatelessWidget {
       'Lihat Proyek',
       Icons.folder_outlined,
       PortfolioTheme.accentDark,
+      destination: ProjectListScreen(),
     ),
     ItemHomepage(
       'Tambah Proyek',
